@@ -337,10 +337,15 @@ object Tasks {
       } collect {
         case r if r.layout.jni.isDirectory => r.layout.jni
       } foreach { j =>
-        val copyList = (j ** "*.so" get) map { l =>
+        val copyLibList = (j ** "*.so" get) map { l =>
           (l, jni / (l relativeTo j).get.getPath)
         }
-        IO.copy(copyList)
+        IO.copy(copyLibList)
+
+        val copyGdbList = (j ** "gdb*" get) map { l =>
+          (l, jni / (l relativeTo j).get.getPath)
+        }
+        IO.copy(copyGdbList)
       }
     }
 
